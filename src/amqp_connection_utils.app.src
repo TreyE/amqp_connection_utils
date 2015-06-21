@@ -1,0 +1,15 @@
+{application, amqp_connection_utils,
+ [
+  {description, "An Erlang amqp_connection_utils library"},
+  {vsn, "1"},
+  {modules, [
+             amqp_connection_utils,
+             amqp_monitored_connection
+            ]},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {env, []}
+ ]}.
