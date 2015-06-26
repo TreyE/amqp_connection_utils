@@ -48,9 +48,15 @@ handle_call(_, _, State) -> {reply, ok, State}.
 handle_info(Info, {Connection,Channel,CallbackMod}) -> 
 	case Info of
 		{'DOWN', _, _, Pid, DeathInfo} -> {stop, {channel_died, Connection, Channel, Pid, DeathInfo}, {Connection, Channel, CallbackMod}};
-		{DI = #'basic.deliver'{}, Content} -> CallbackMod:handle_message(Connection, Channel, DI, Content);
+		{DI = #'basic.deliver'{}, Content} -> invoke_module_message(Info, Connection, Channel, CallbackMod, DI, Content);
 		ConOK = #'basic.consume_ok'{} -> CallbackMod:handle_consume_ok(Connection, Channel, ConOK);
 		CanOK = #'basic.cancel_ok'{} -> CallbackMod:handle_cancel_ok(Connection, Channel, CanOK);
 		%% TODO: Add callback mod invocation
 		_ -> {noreply, {Connection, Channel, CallbackMod}}
+	end.
+
+invoke_module_message(Info, Connection, Channel, CallbackMod, DI, Content) -> 
+	case catch(CallbackMod:handle_message(Connection, Channel, DI, Content)) of
+		ok -> {noreply, {Connection, Channel, CallbackMod}};
+		A -> {stop, {handle_message_error, Info, Connection, Channel, CallbackMod, A}}
 	end.
