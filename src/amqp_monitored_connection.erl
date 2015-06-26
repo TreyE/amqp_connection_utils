@@ -35,6 +35,6 @@ handle_call(get_connection,_,{ConnectionSettings,Connection}) -> {reply, Connect
 %% @private
 handle_info(Info, {ConnectionSettings,Connection}) -> 
 	case Info of
-		{'DOWN', _, _, Pid, Info} -> {stop, {connection_died, ConnectionSettings, Pid, Info}, {ConnectionSettings,Connection}};
+		{'DOWN', _, _, Pid, DeathInfo} -> {stop, {connection_died, ConnectionSettings, Pid, DeathInfo}, {ConnectionSettings,Connection}};
 		_ -> {noreply, {ConnectionSettings, Connection}}
 	end.
