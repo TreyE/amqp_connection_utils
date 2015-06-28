@@ -3,7 +3,6 @@
   {description, "An Erlang amqp_connection_utils library"},
   {vsn, "1"},
   {modules, [
-             amqp_connection_utils,
              amqp_monitored_connection,
              amqp_monitored_consumer
             ]},
