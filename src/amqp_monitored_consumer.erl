@@ -23,7 +23,7 @@
 -callback handle_message(State::term(), Channel::pid(), DeliveryInfo::delivery_info(), Content::term()) -> tuple('ok', State::term()).
 
 -spec start_link(NameSpec::name_spec(), Subscription::subscription(), CallbackMod::module(), Args::term()) -> tuple('ok',pid()) | 'ignore' | tuple('error',Error::term()).
-start_link(NameSpec, Subscription, CallbackMod, Args) -> gen_server:start_link(NameSpec, ?MODULE, {NameSpec, Subscription, CallbackMod, Args}).
+start_link(NameSpec, Subscription, CallbackMod, Args) -> gen_server:start_link(gen_name(), ?MODULE, {NameSpec, Subscription, CallbackMod, Args}).
 
 %% @private
 init({ConnectionNameSpec, Subscription, CallbackMod, Args}) ->
@@ -98,3 +98,8 @@ invoke_module_cancel_ok(Connection, Channel, CallbackMod, ModState, CanOK) ->
 		{ok, State} -> {noreply, {Connection, Channel, CallbackMod, State}};
 		A -> {stop, {handle_consume_ok_error, CanOK, Connection, Channel, CallbackMod, ModState, A}}
 	end.
+
+%% @private
+gen_name() -> 
+	I = erlang:unique_integer([positive]),
+	{local, erlang:list_to_atom("amqp_dynamic_consumer_" ++ erlang:integer_to_list(I))}.
