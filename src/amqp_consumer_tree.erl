@@ -9,7 +9,7 @@ generate_supervisor_specs(
 	CallbackMod,
 	ModArgs,
 	Count
-) -> {
+) -> {ok, {
 {one_for_all, 1, 5},
 [
 {amqp_connection_mon,
@@ -23,4 +23,4 @@ generate_supervisor_specs(
   infinity,
   supervisor,
   dynamic
-}]}.
+}]}}.
