@@ -1,8 +1,10 @@
 {application, amqp_connection_utils,
  [
-  {description, "An Erlang amqp_connection_utils library"},
-  {vsn, "1"},
+  {description, "Utilities making it easier to build and monitor consumers."},
+  {vsn, "0.1.0"},
   {modules, [
+             amqp_consumer_supervisor,
+             amqp_consumer_tree,
              amqp_monitored_connection,
              amqp_monitored_consumer
             ]},
