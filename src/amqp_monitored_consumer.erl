@@ -6,7 +6,7 @@
 
 -export([init/1, terminate/2, code_change/3, handle_cast/2, handle_info/2, handle_call/3]).
 
--include("amqp_client.hrl").
+-include_lib("amqp_client/include/amqp_client.hrl").
 
 -type cancel_ok() :: #'basic.cancel_ok'{}.
 -type consume_ok() :: #'basic.consume_ok'{}.
