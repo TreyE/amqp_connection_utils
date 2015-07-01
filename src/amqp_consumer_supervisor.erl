@@ -12,6 +12,7 @@ ok,
 generate_child_specs(ConnectionNameSpec, Subscription, CallbackMod, Args, Count) -> lists:map(fun(_I) -> {
 		undefined,
 		{amqp_monitored_consumer, start_link, [ConnectionNameSpec,Subscription,CallbackMod, Args]},
+		permanent,
 		5000,
 		worker,
 		dynamic
