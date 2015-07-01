@@ -9,9 +9,9 @@ ok,
 {sup_flags(), generate_child_specs(ConnectionNameSpec, Subscription,CallbackMod,ModArgs,Count)}
 }.
 
-generate_child_specs(ConnectionNameSpec, Subscription, CallbackMod, Args, Count) -> lists:map(fun(_I) -> {
+generate_child_specs(ConnectionNameSpec, Subscription, CallbackMod, Args, Count) -> lists:map(fun(I) -> {
 		undefined,
-		{amqp_monitored_consumer, start_link, [ConnectionNameSpec,Subscription,CallbackMod, Args]},
+		{amqp_monitored_consumer, start_link, [ConnectionNameSpec,Subscription,CallbackMod, Args, I]},
 		permanent,
 		5000,
 		worker,
