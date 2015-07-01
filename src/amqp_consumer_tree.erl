@@ -10,7 +10,7 @@ generate_supervisor_specs(
 	ModArgs,
 	Count
 ) -> {ok, {
-{one_for_all, 1, 5},
+{one_for_all, 3, 5},
 [
 {amqp_connection_mon,
   {amqp_monitored_connection, start_link, [NameSpec, ConnectionSettings]},

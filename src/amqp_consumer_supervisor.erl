@@ -6,7 +6,7 @@ start_link(ConnectionNameSpec, Subscription, CallbackMod, ModArgs, Count) -> sup
 
 init({ConnectionNameSpec, Subscription, CallbackMod, ModArgs, Count}) -> {
 ok,
-{sup_flags(), generate_child_specs(ConnectionNameSpec, Subscription,CallbackMod,ModArgs,Count)}
+{sup_flags(Count), generate_child_specs(ConnectionNameSpec, Subscription,CallbackMod,ModArgs,Count)}
 }.
 
 generate_child_specs(ConnectionNameSpec, Subscription, CallbackMod, Args, Count) -> lists:map(fun(I) -> {
@@ -19,8 +19,8 @@ generate_child_specs(ConnectionNameSpec, Subscription, CallbackMod, Args, Count)
 	} end,
         lists:seq(1,Count)).
 
-sup_flags() -> {
+sup_flags(Count) -> {
   one_for_one,
-  1,
+  Count * 2,
   5
 }.
