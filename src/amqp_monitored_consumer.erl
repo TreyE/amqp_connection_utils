@@ -46,6 +46,7 @@ init_module_state(Connection, Channel, Subscription, CallbackMod, Args) ->
 create_consumer(Connection, Channel, Subscription, CallbackMod, ModState) ->
 	case catch(amqp_channel:subscribe(Channel, Subscription, self())) of
 		ok -> {ok, {Connection, Channel, CallbackMod, ModState}};
+		#'basic.consume_ok'{} -> {ok, {Connection, Channel, CallbackMod, ModState}};
 		A -> {stop, {subscribe_failed, A}}
 	end.
 
