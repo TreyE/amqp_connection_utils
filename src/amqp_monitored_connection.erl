@@ -13,7 +13,7 @@
 -type name_spec() :: tuple('local',Name::atom()) | tuple('global',GlobalName::term()) | tuple('via',Module::module(),ViaName::term()).
 
 -spec start_link(NameSpec::name_spec(), ConnectionSettings::amqp_connection_settings()) -> tuple('ok',pid()) | 'ignore' | tuple('error',Error::term()).
-start_link(NameSpec, ConnectionSettings) -> gen_server:start_link(NameSpec, ?MODULE, ConnectionSettings).
+start_link(NameSpec, ConnectionSettings) -> gen_server:start_link(NameSpec, ?MODULE, ConnectionSettings, []).
 
 -spec get_connection(NameSpec::name_spec()) -> pid().
 get_connection(NameSpec) -> gen_server:call(convert_namespec(NameSpec), get_connection).
