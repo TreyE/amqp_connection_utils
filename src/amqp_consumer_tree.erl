@@ -14,12 +14,14 @@ generate_supervisor_specs(
 [
 {amqp_connection_mon,
   {amqp_monitored_connection, start_link, [NameSpec, ConnectionSettings]},
+  permanent,
   5000,
   worker,
   dynamic
 },
 {amqp_consumer_mon_sup,
   {amqp_consumer_supervisor, start_link, [NameSpec, Subscription, CallbackMod, ModArgs, Count]},
+  permanent,
   infinity,
   supervisor,
   dynamic
