@@ -42,4 +42,4 @@ generate_supervisor_specs(
   infinity,
   supervisor,
   dynamic
-}] + OtherSpecs)}}.
+}] ++ OtherSpecs)}}.
