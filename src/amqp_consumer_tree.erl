@@ -1,6 +1,6 @@
 -module(amqp_consumer_tree).
 
--export([generate_supervisor_specs/6]).
+-export([generate_supervisor_specs/6, generate_supervisor_specs/7]).
 
 generate_supervisor_specs(
 	NameSpec,
@@ -8,10 +8,27 @@ generate_supervisor_specs(
 	Subscription,
 	CallbackMod,
 	ModArgs,
-	Count
+	Count) -> 
+generate_supervisor_specs(
+	NameSpec,
+	ConnectionSettings,
+	Subscription,
+	CallbackMod,
+	ModArgs,
+	Count,
+	[]).
+
+generate_supervisor_specs(
+	NameSpec,
+	ConnectionSettings,
+	Subscription,
+	CallbackMod,
+	ModArgs,
+	Count,
+	OtherSpecs
 ) -> {ok, {
 {one_for_all, 3, 5},
-[
+([
 {amqp_connection_mon,
   {amqp_monitored_connection, start_link, [NameSpec, ConnectionSettings]},
   permanent,
@@ -25,4 +42,4 @@ generate_supervisor_specs(
   infinity,
   supervisor,
   dynamic
-}]}}.
+}] + OtherSpecs)}}.
