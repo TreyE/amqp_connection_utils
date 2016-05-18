@@ -12,17 +12,17 @@
 -type consume_ok() :: #'basic.consume_ok'{}.
 -type subscription() :: #'basic.consume'{}.
 -type delivery_info() :: #'basic.deliver'{}.
--type name_spec() :: tuple('local',Name::atom()) | tuple('global',GlobalName::term()) | tuple('via',Module::module(),ViaName::term()).
+-type name_spec() :: {'local',Name::atom()} | {'global',GlobalName::term()} | {'via',Module::module(),ViaName::term()}.
 
--callback init_consumer(Connection::pid(), Channel::pid(), Args::term()) -> tuple('ok', State::term()) | tuple('stop', Reason::term()).
+-callback init_consumer(Connection::pid(), Channel::pid(), Args::term()) -> {'ok', State::term()} | {'stop', Reason::term()}.
 
--callback handle_cancel_ok(State::term(), Channel::pid(), CanOK::cancel_ok()) -> tuple('ok', State::term()).
+-callback handle_cancel_ok(State::term(), Channel::pid(), CanOK::cancel_ok()) -> {'ok', State::term()}.
 
--callback handle_consume_ok(State::term(), Channel::pid(), ConOK::consume_ok()) -> tuple('ok', State::term()).
+-callback handle_consume_ok(State::term(), Channel::pid(), ConOK::consume_ok()) -> {'ok', State::term()}.
 
--callback handle_message(State::term(), Channel::pid(), DeliveryInfo::delivery_info(), Content::term()) -> tuple('ok', State::term()).
+-callback handle_message(State::term(), Channel::pid(), DeliveryInfo::delivery_info(), Content::term()) -> {'ok', State::term()}.
 
--spec start_link(NameSpec::name_spec(), Subscription::subscription(), CallbackMod::module(), Args::term(), Idx::integer()) -> tuple('ok',pid()) | 'ignore' | tuple('error',Error::term()).
+-spec start_link(NameSpec::name_spec(), Subscription::subscription(), CallbackMod::module(), Args::term(), Idx::integer()) -> {'ok',pid()} | 'ignore' | {'error',Error::term()}.
 start_link(NameSpec, Subscription, CallbackMod, Args, Idx) -> gen_server:start_link(gen_name(CallbackMod, Idx), ?MODULE, {NameSpec, Subscription, CallbackMod, Args}, []).
 
 %% @private

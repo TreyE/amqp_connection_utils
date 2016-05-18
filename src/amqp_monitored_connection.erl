@@ -10,9 +10,9 @@
 
 -type amqp_connection_settings() :: #amqp_params_direct{} | #amqp_params_network{}.
 
--type name_spec() :: tuple('local',Name::atom()) | tuple('global',GlobalName::term()) | tuple('via',Module::module(),ViaName::term()).
+-type name_spec() :: {'local',Name::atom()} | {'global',GlobalName::term()} | {'via',Module::module(),ViaName::term()}.
 
--spec start_link(NameSpec::name_spec(), ConnectionSettings::amqp_connection_settings()) -> tuple('ok',pid()) | 'ignore' | tuple('error',Error::term()).
+-spec start_link(NameSpec::name_spec(), ConnectionSettings::amqp_connection_settings()) -> {'ok',pid()} | 'ignore' | {'error',Error::term()}.
 start_link(NameSpec, ConnectionSettings) -> gen_server:start_link(NameSpec, ?MODULE, ConnectionSettings, []).
 
 -spec get_connection(NameSpec::name_spec()) -> pid().
