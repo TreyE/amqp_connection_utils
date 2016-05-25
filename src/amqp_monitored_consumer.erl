@@ -83,21 +83,29 @@ handle_info(Info, {Connection,Channel,CallbackMod,ModState}) ->
 invoke_module_message(Connection, Channel, CallbackMod, ModState, DI, Content) -> 
 	case catch(CallbackMod:handle_message(ModState, Channel, DI, Content)) of
 		{ok,State} -> {noreply, {Connection, Channel, CallbackMod, State}};
-		A -> {stop, {handle_message_error, DI, Content, Connection, Channel, CallbackMod, ModState, A}, {Connection,Channel,CallbackMod,ModState}}
+		A ->    
+			amqp_channel:close(Channel),
+			{stop, {handle_message_error, DI, Content, Connection, Channel, CallbackMod, ModState, A}, {Connection,Channel,CallbackMod,ModState}}
 	end.
+
+%% @private
 
 %% @private
 invoke_module_consume_ok(Connection, Channel, CallbackMod, ModState, ConOK) ->
 	case catch(CallbackMod:handle_consume_ok(ModState, Channel, ConOK)) of
 		{ok, State} -> {noreply, {Connection, Channel, CallbackMod, State}};
-		A -> {stop, {handle_consume_ok_error, ConOK, Connection, Channel, CallbackMod, ModState, A}, {Connection,Channel,CallbackMod,ModState}}
+		A ->
+			amqp_channel:close(Channel),
+			{stop, {handle_consume_ok_error, ConOK, Connection, Channel, CallbackMod, ModState, A}, {Connection,Channel,CallbackMod,ModState}}
 	end.
 
 %% @private
 invoke_module_cancel_ok(Connection, Channel, CallbackMod, ModState, CanOK) ->
 	case catch(CallbackMod:handle_cancel_ok(ModState, Channel, CanOK)) of
 		{ok, State} -> {noreply, {Connection, Channel, CallbackMod, State}};
-		A -> {stop, {handle_consume_ok_error, CanOK, Connection, Channel, CallbackMod, ModState, A}, {Connection,Channel,CallbackMod,ModState}}
+		A ->
+			amqp_channel:close(Channel),
+			{stop, {handle_consume_ok_error, CanOK, Connection, Channel, CallbackMod, ModState, A}, {Connection,Channel,CallbackMod,ModState}}
 	end.
 
 %% @private
