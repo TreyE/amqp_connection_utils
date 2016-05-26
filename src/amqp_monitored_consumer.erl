@@ -37,7 +37,7 @@ init({ConnectionNameSpec, Subscription, CallbackMod, Args}) ->
 %% @private
 init_module_state(Connection, Channel, Subscription, CallbackMod, Args) ->
 	case catch(CallbackMod:init_consumer(Connection, Channel, Args)) of
-	        {ok, State} -> create_consumer(Connection, Channel, Subscription, CallbackMod, State);
+	        {ok, State} -> set_prefetch(Connection, Channel, Subscription, CallbackMod, State);
 	        {stop, Reason} -> {stop, {consumer_init_stop, Reason}};
 		A -> {stop, {consumer_init_error, A}} 
 	end.
@@ -49,6 +49,15 @@ create_consumer(Connection, Channel, Subscription, CallbackMod, ModState) ->
 		#'basic.consume_ok'{} -> {ok, {Connection, Channel, CallbackMod, ModState}};
 		A -> {stop, {subscribe_failed, A}}
 	end.
+
+%% @private
+set_prefetch(Connection, Channel, Subscription, CallbackMod, ModState) ->
+        case catch(amqp_channel:call(Channel, #'basic.qos'{prefetch_count = 1}, none)) of
+                ok -> create_consumer(Connection, Channel, Subscription, CallbackMod, ModState);
+                #'basic.qos_ok'{} -> create_consumer(Connection, Channel, Subscription, CallbackMod, ModState);
+                A -> {stop, {qos_failed, A}}
+        end.
+
 
 open_channel(ConnectionNameSpec) -> 
 	Connection = amqp_monitored_connection:get_connection(ConnectionNameSpec),
